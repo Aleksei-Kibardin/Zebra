@@ -8,6 +8,7 @@
           v-for="(news, index) in newsView"
         >
           <img
+            @click="console.log(dateFormated(news.date).day)"
             v-if="news.image"
             :src="news.image"
             alt="News Image"
@@ -16,9 +17,9 @@
           <div class="card-content">
             <div>
               <div class="news-card__date">
-                <span class="day">28</span>
+                <span class="day">{{dateFormated(news.date).day}}</span>
                 <div class="month-year">
-                  <span>February</span> <span>2022</span>
+                  <span>{{dateFormated(news.date).month}}</span> <span>{{dateFormated(news.date).year}}</span>
                 </div>
               </div>
               <h2 class="news-card__title">{{ news.name }}</h2>
@@ -58,6 +59,15 @@ const btnShow = computed(() => {
     return false;
   }
 });
+
+const dateFormated = (date) => {
+  let dateForm = new Date(date * 1000);
+  return {
+    day: dateForm.toLocaleString('en-US', {day: 'numeric'}),
+    month: dateForm.toLocaleString('en-US', { month: 'long'}),
+    year: dateForm.toLocaleString('en-US', {year: 'numeric',})
+  }
+};
 
 const loadMore = () => {
   getNews(newsList, fullNews);
