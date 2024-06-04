@@ -1,0 +1,111 @@
+:root{
+  --gutter: 20px
+  }
+  
+  *,
+  *::before,
+  *::after {
+    
+    box-sizing: inherit;
+    font-family: "Nunito Sans", sans-serif;
+  }
+  a{
+    text-decoration: none;
+  }
+  html {
+    box-sizing: border-box;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  body, h1, h2, h3, h4, p,
+  figure, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+  }
+  ul[role='list'],
+  ol[role='list'] {
+    list-style: none;
+  }
+  body {
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4,
+  button, input, label {
+    line-height: 1.1;
+  }
+  h1, h2,
+  h3, h4 {
+    text-wrap: balance;
+  }
+  a:not([class]) {
+    text-decoration-skip-ink: auto;
+    color: currentColor;
+  }
+  img,
+  picture {
+    max-width: 100%;
+    display: block;
+  }
+  input, button,
+  textarea, select {
+    font: inherit;
+  }
+  textarea:not([rows]) {
+    min-height: 10em;
+  }
+  :target {
+    scroll-margin-block: 5ex;
+  }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.col-2 {
+  width: calc(16.66% - var(--gutter));
+}
+
+.col-3 {
+  width: calc(25% - var(--gutter));
+}
+
+.col-4 {
+  width: calc(33.33% - var(--gutter));
+}
+
+.col-6 {
+  width: calc(50% - var(--gutter));
+}
+
+.col-12 {
+  width: calc(100%);
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .col-2 {
+    width: calc(25% - var(--gutter));
+  }
+  .col-3 {
+    width: calc(50% - var(--gutter));
+  }
+  .col-4 {
+    width: calc(66.66% - var(--gutter));
+  }
+  .col-6 {
+    width: calc(100%);
+  }
+}
+
+@media (min-width: 200px) and (max-width: 499px) {
+  .col-2 {
+    width: calc(50% - var(--gutter));
+  }
+  .col-3,
+  .col-4,
+  .col-6 {
+    width: calc(100%);
+  }
+}
