@@ -8,7 +8,6 @@
           v-for="(news, index) in newsView"
         >
           <img
-            @click="console.log(dateFormated(news.date).day)"
             v-if="news.image"
             :src="news.image"
             alt="News Image"
