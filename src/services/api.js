@@ -1,4 +1,4 @@
-const apiUrl = "http://flems.github.io/test/api/news/";
+const apiUrl = "https://flems.github.io/test/api/news/";
 let currentPage = 1;
 let requestResolution = true;
 
