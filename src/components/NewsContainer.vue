@@ -2,7 +2,11 @@
   <div class="wrap-content">
     <div class="container">
       <div class="row">
-        <div class="news-card col-3" :class="{ 'no-image': !news.image }" v-for="(news, index) in newsList">
+        <div
+          class="news-card col-3"
+          :class="{ 'no-image': !news.image }"
+          v-for="(news, index) in newsView"
+        >
           <img
             v-if="news.image"
             :src="news.image"
@@ -26,7 +30,7 @@
       </div>
       <div class="news-container__load-more row">
         <button
-          v-show="btnShow === true"
+          v-show="btnShow"
           @click="loadMore"
           class="news-container__button"
         >
@@ -38,21 +42,30 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
-import NewsCard from "./NewsCard.vue";
+import { ref, reactive, onBeforeMount, computed } from "vue";
 import { getNews } from "../services/api.js";
 
-const btnShow = ref(true);
+const fullNews = ref(true);
 const newsList = reactive([]);
+let newsLimit = ref(9);
+
+const newsView = computed(() => newsList.slice(0, newsLimit.value));
+
+const btnShow = computed(() => {
+  if (fullNews.value === true && newsList.length > newsLimit.value) {
+    return true;
+  } else {
+    return false;
+  }
+});
 
 const loadMore = () => {
-  getNews(newsList, btnShow);
-  console.log(newsList);
+  getNews(newsList, fullNews);
+  newsLimit.value = newsLimit.value + 9;
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   getNews(newsList, btnShow);
-  console.log(newsList);
 });
 </script>
 
@@ -91,9 +104,9 @@ onMounted(() => {
 .container {
   @include fluid("margin-top", 64);
 }
-.no-image{
+.no-image {
   border: 1px solid #0f62fe;
-  .card-content{
+  .card-content {
     border: 0;
   }
 }
