@@ -3,34 +3,31 @@ let currentPage = 1;
 let requestResolution = true;
 
 const requestNews = async (url) => {
-  const response = await fetch(url + currentPage + "/");
-  if (!response.ok) {
-    throw new Error("Network response was not ok " + response.statusText);
+  let json;
+  try {
+    const response = await fetch(url + currentPage + "/");
+    json = await response.json();
+    console.log("Success");
+  } catch {
+    console.error("Failed");
   }
-  const json = await response.json();
-
-  return json;
+  return json.items;
 };
 
 const checkNextPage = async (url) => {
   const nextPage = currentPage + 1;
-  const response = await fetch(apiUrl + nextPage + "/", { method: "head" });
-
-  if (!response.ok) {
-    requestResolution = false;
-    throw new Error("Network response was not ok " + response.statusText);
-  }
+  const response = await fetch(url + nextPage + "/", { method: "HEAD" })
+  return response.ok
 };
 
-const getNews = (storage) => {
+export const getNews = async (storage, status) => {
   if (requestResolution === true) {
-    storage = requestNews(apiUrl);
-    checkNextPage(apiUrl);
+    const newsData = await requestNews(apiUrl);
+    storage.push(...newsData);
+    status.value = await checkNextPage(apiUrl);
     currentPage++;
-    return true
+    console.log(storage)
   } else {
-    return false
+    console.log('страницы кончились')
   }
 };
-
-getNews(apiUrl);

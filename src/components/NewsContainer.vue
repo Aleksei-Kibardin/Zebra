@@ -2,18 +2,34 @@
   <div class="wrap-content">
     <div class="container">
       <div class="row">
-        <NewsCard
-          v-for="(news, index) in newsList"
-          :key="index"
-          :image="news.image"
-          :date="news.date"
-          :title="news.title"
-          :description="news.description"
-          class="news-container__card"
-        />
+        <div class="news-card col-3" :class="{ 'no-image': !news.image }" v-for="(news, index) in newsList">
+          <img
+            v-if="news.image"
+            :src="news.image"
+            alt="News Image"
+            class="news-card__image"
+          />
+          <div class="card-content">
+            <div>
+              <div class="news-card__date">
+                <span class="day">28</span>
+                <div class="month-year">
+                  <span>February</span> <span>2022</span>
+                </div>
+              </div>
+              <h2 class="news-card__title">{{ news.name }}</h2>
+              <p class="news-card__description">{{ news.previewText }}</p>
+            </div>
+            <div class="news-card__category">{{ news.type.value }}</div>
+          </div>
+        </div>
       </div>
       <div class="news-container__load-more row">
-        <button @click="loadMore" class="news-container__button">
+        <button
+          v-show="btnShow === true"
+          @click="loadMore"
+          class="news-container__button"
+        >
           Загрузить ещё
         </button>
       </div>
@@ -22,71 +38,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import NewsCard from "./NewsCard.vue";
+import { getNews } from "../services/api.js";
 
-const newsList = ref([
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha сообщает о новых высокопроизводительных...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-  {
-    image: "@/assets/imgCard.png",
-    date: "28 February 2022",
-    title: "Alpha объединяет усилия с Миром...",
-    description:
-      "Alpha объявляет о партнёрстве с Миром, ведущим мировым поставщиком экологических услуг, чтобы помочь клиентам строить светлое будущее.",
-  },
-]);
+const btnShow = ref(true);
+const newsList = reactive([]);
 
 const loadMore = () => {
-  console.log("Load more news");
+  getNews(newsList, btnShow);
+  console.log(newsList);
 };
+
+onMounted(() => {
+  getNews(newsList, btnShow);
+  console.log(newsList);
+});
 </script>
 
 <style scoped lang="scss">
@@ -124,6 +91,75 @@ const loadMore = () => {
 .container {
   @include fluid("margin-top", 64);
 }
+.no-image{
+  border: 1px solid #0f62fe;
+  .card-content{
+    border: 0;
+  }
+}
+.news-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  position: relative;
+  background: #fff;
+  @include fluid("width", 534);
+  @include fluid("border-radius", 16);
+  overflow: hidden;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  border: 1px solid #0f62fe;
+  border-top: 0;
+  @include fluid("border-bottom-left-radius", 16);
+  @include fluid("border-bottom-right-radius", 16);
+  @include fluid("padding", 20);
+}
+
+.news-card__image {
+  top: 0;
+  @include fluid("width", 538);
+}
+
+.news-card__title {
+  @include fluid("font-size", 22);
+  margin: 15px 0 10px;
+  font-weight: 400;
+  color: #0c5bef;
+}
+
+.news-card__description {
+  color: #222327;
+  @include fluid("font-size", 20);
+}
+
+.news-card__date {
+  align-items: center;
+  display: flex;
+  color: #aaa;
+  @include fluid("font-size", 15);
+  .day {
+    @include fluid("font-size", 36);
+  }
+  .month-year {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.news-card__category {
+  text-align: center;
+  background: #f0f6fe;
+  @include fluid("margin-top", 20);
+  @include fluid("border-radius", 360);
+  @include fluid("font-size", 14);
+  padding: 4px 16px;
+  width: max-content;
+}
 @media (max-width: 1450px) {
   .row {
     justify-content: space-evenly;
@@ -131,7 +167,7 @@ const loadMore = () => {
 }
 @media (max-width: 220px) {
   .news-container__button {
-    width: 190px
+    width: 190px;
   }
 }
 </style>
