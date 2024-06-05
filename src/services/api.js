@@ -7,7 +7,6 @@ const requestNews = async (url) => {
   try {
     const response = await fetch(url + currentPage + "/");
     json = await response.json();
-    console.log("Success");
   } catch {
     console.error("Failed");
   }
@@ -22,11 +21,10 @@ const checkNextPage = async (url) => {
 
 export const getNews = async (storage, status) => {
   if (requestResolution === true) {
+    status.value = await checkNextPage(apiUrl);
     const newsData = await requestNews(apiUrl);
     storage.push(...newsData);
-    status.value = await checkNextPage(apiUrl);
     currentPage++;
-    console.log(storage)
   } else {
     console.log('страницы кончились')
   }

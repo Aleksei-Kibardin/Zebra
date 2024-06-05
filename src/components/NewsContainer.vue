@@ -124,6 +124,7 @@ onBeforeMount(() => {
   flex-direction: column;
   justify-content: stretch;
   position: relative;
+  cursor: pointer;
   background: #fff;
   @include fluid("width", 534);
   @include fluid("border-radius", 16);
